@@ -25,7 +25,10 @@ class Player():
         self.first_choice = None
         self.final_choice = None
         self.name = random.choice(list(Name)).value
-    
+
+    def __repr__(self):
+        return f"Player(name={self.name}, will_switch={self.will_switch})"
+
     def choose_box(self, boxes):
         self.first_choice = random.SystemRandom().choice(boxes)
         return self.first_choice
