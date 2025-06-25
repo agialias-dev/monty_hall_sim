@@ -24,20 +24,20 @@ def play_round(player_type, verbose):
         def v2print(print_data):
             pass
     player = Player(player_type)
-    v2print(f"DEBUG: {repr(player)}")
+    v2print(f"\nDEBUG: {repr(player)}\n")
     v1print(f"Host: Welcome {player.name}, to Keep OR Switch!")
 
 # Generate 3 boxes.
     boxes = [Box(_) for _ in range(1, 4)]
     winning_box = random.SystemRandom().choice(boxes)
     winning_box.has_car = True
-    v2print(f"DEBUG: {boxes}")
+    v2print(f"\nDEBUG: {boxes}\n")
 
 # Player picks a box.
     v1print(f"Host: I have placed a car in one of these three boxes, the other two contain a goat. {player.name}, please choose a box.")
     chosen_box = player.choose_box(boxes)
     chosen_box.is_chosen = True
-    v2print(f"DEBUG: Chosen box = {repr(chosen_box)}")
+    v2print(f"\nDEBUG: Chosen box = {repr(chosen_box)}\n")
     v1print(f"{player.name}: I would like box number {chosen_box.number} please.")
 
 # Host Eliminates a losing box.
@@ -45,18 +45,18 @@ def play_round(player_type, verbose):
         if box.is_chosen == False and box.has_car == False:
             box.is_opened = True
             v1print(f"Host: I can reveal that box number {box.number} had a {'car' if box.has_car else 'goat'} inside it, and I will now remove it from the game.")
-            v2print(f"DEBUG: Host removed {repr(box)}")
+            v2print(f"\nDEBUG: Host removed {repr(box)}\n")
             boxes.remove(box)
             break
 
 # Player chooses to keep or switch.
     v1print(f"Host: Now, {player.name}, you have the option to keep your original box or switch to the remaining box.")
-    v2print(f"DEBUG: {boxes}")
+    v2print(f"\nDEBUG: {boxes}\n")
     final_choice = player.keep_or_switch(boxes)
 
 # Result of the round
     round_result = final_choice.has_car
-    v2print(f"DEBUG: Final choice is {repr(final_choice)}")
+    v2print(f"\nDEBUG: Final choice is {repr(final_choice)}\n")
     if final_choice == player.first_choice:
         v1print(f"{player.name}: I have decided to keep my box.") 
         if final_choice.has_car:
