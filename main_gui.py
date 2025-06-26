@@ -88,8 +88,10 @@ class MontyHallApp:
                 sys.stdout = StdoutRedirector(self.output_area)
 
             # Resize the Output area appropriately
-            if verbosity > 0:
-                self.output_area.config(height=30)
+            if verbosity == 1:
+                self.output_area.config(height=22)
+            elif verbosity == 2:
+                self.output_area.config(height=35)
             else:
                 self.output_area.config(height=5)
 
