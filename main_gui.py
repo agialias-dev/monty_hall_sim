@@ -6,6 +6,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 from round import play_round
 
+# Create the GUI
 class MontyHallApp:
     def __init__(self, root):
         self.root = root
@@ -40,7 +41,7 @@ class MontyHallApp:
         run_button = tk.Button(root, text="Run Simulation", command=self.run_simulation)
         run_button.grid(row=3, column=0, columnspan=2, pady=10)
 
-        # Map Plot
+        # Plot Area
         self.figure = None
         self.canvas = None
         self.ax = None
@@ -51,9 +52,12 @@ class MontyHallApp:
 
     def run_simulation(self):
         try:
+            # Set up parameters
             iterations = int(self.iterations_entry.get())
             verbosity = self.verbosity_var.get()
             plotting = self.plot_option.get()
+            
+            # Reset the plot area if it exists
             if self.canvas:
                 self.canvas.get_tk_widget().destroy()
                 self.canvas = None
@@ -63,14 +67,19 @@ class MontyHallApp:
                 self.keep_line = None
                 self.plot_frame.grid_forget()
                 self.root.grid_rowconfigure(5, minsize=0)
+            
+            # If plotting is disabled, ensure the plot area is hidden
             if not plotting and self.canvas:
                 self.canvas.get_tk_widget().destroy()
                 self.canvas = None
                 self.plot_frame.grid_remove()
+            
+            # Calculate sleep time and redraw rate
             target_time = 2.5
             sleep = target_time/iterations
             redraw_rate = max(1, iterations // 100)
-
+            
+            # Clear the output area
             self.output_area.config(state="normal")
             self.output_area.delete(1.0, tk.END)
 
@@ -95,9 +104,7 @@ class MontyHallApp:
             else:
                 self.output_area.config(height=5)
 
-            # Run simulations
-            switch_cumulative = []
-            keep_cumulative = []
+            # Create the plot if plotting is enabled
             if plotting:
                 self.plot_frame.grid(row=5, column=0, columnspan=2, padx=10, pady=5)
                 self.root.grid_rowconfigure(5, weight=0)
@@ -118,6 +125,9 @@ class MontyHallApp:
                 self.canvas.draw()
                 self.canvas.get_tk_widget().pack()
 
+            # Start the simulation
+            switch_cumulative = []
+            keep_cumulative = []
             switch_wins = 0
             for i in range(iterations):
                 sw = play_round(True, verbosity)
@@ -152,7 +162,7 @@ class MontyHallApp:
                 import sys
                 sys.stdout = sys.__stdout__
 
-            # Display final result
+            # Display final results
             result = (
                 f"\n--- Results ---\n"
                 f"Switching won {switch_wins}/{iterations} times ({(switch_wins/iterations)*100:.2f}%)\n"
@@ -161,8 +171,11 @@ class MontyHallApp:
             self.output_area.insert(tk.END, result)
             self.output_area.config(state="disabled")
 
+        # Handle exceptions
         except ValueError:
             messagebox.showerror("Input Error", "Please enter a valid number of iterations.")
+        except Exception as e:
+            messagebox.showerror("Error", f"An unexpected error occurred: {str(e)}")
 
 # Launch the GUI
 if __name__ == "__main__":
